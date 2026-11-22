@@ -13,15 +13,16 @@
 
 ## Project Overview
 
-Author: Denise Case
+Author: Angie Crews
 
-Date: 2026 October
+Date: 2026 November
 
 This project brings together techniques introduced
 throughout the Continuous Intelligence course.
 
-The goal is to transform system measurements into useful signals,
-identify unusual behavior, and summarize the system's current state.
+The goal is to develop an integrated monitoring application
+that identifies unusual spending patterns and changes over
+time using Missouri State Expenditures travel data.
 
 The project is configured in
 [pyproject.toml](pyproject.toml).
