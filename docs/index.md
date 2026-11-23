@@ -163,6 +163,133 @@ The most important finding is that **an overall STABLE assessment does not mean 
 
 The three-level classification system and interactive visualization provide additional detail for identifying and investigating potential performance problems.
 
+## Part D3: Missouri State Travel Expenditure Dashboard
+
+### Custom Project Overview
+
+For Part D3, I developed a custom dashboard to analyze Missouri state travel expenditures for fiscal years 2022–2026.
+
+The goal was to identify spending trends, compare state agencies, examine travel expense categories, and flag unusually large payments for further review.
+
+Unlike the original system monitoring example, this application uses actual state expenditure records to explore financial activity.
+
+### Data Source
+
+The project uses Missouri State Expenditures data from the [Missouri Open Data Portal](https://data.mo.gov/).
+
+Five annual CSV files were combined into one dataset containing **178,028 travel expenditure records**.
+
+| Fiscal Year | Travel Records |
+|---|---:|
+| 2022 | 26,629 |
+| 2023 | 36,560 |
+| 2024 | 38,691 |
+| 2025 | 38,746 |
+| 2026 | 37,402 |
+| **Total** | **178,028** |
+
+The dataset includes fiscal year, state agency, expense category, expense description, vendor, and payment amount.
+
+### Methods and Tools
+
+I used Python and Polars to prepare and analyze the expenditure data.
+
+The process included:
+
+1. Loading five annual expenditure files.
+2. Filtering records to the TRAVEL category.
+3. Validating payment amounts and combining the annual files.
+4. Calculating total spending by fiscal year, state agency, and expense type.
+5. Creating interactive Altair charts in a Marimo application.
+6. Adding a fiscal-year dropdown to compare spending across different periods.
+7. Adding an adjustable dollar threshold to flag unusually large payments.
+
+### Results and Visualizations
+
+#### Annual Travel Spending
+
+| Fiscal Year | Approximate Spending |
+|---|---:|
+| 2022 | $22.33 million |
+| 2023 | $32.95 million |
+| 2024 | $38.11 million |
+| 2025 | $39.23 million |
+| 2026 | $39.81 million |
+
+Travel spending increased from approximately $22.33 million in 2022 to $39.81 million in 2026.
+
+The dashboard includes charts comparing annual spending, state agencies, and travel expense categories.
+
+![Missouri Annual Travel Spending](images/missouri-travel-spending.png)
+
+#### Spending by Agency
+
+The Judiciary, Social Services, and Health and Senior Services were among the agencies with the highest total travel spending across the five years.
+
+The interactive fiscal-year selector allows users to examine agency spending for individual years or all years combined.
+
+#### Spending by Expense Type
+
+In-state lodging and in-state mileage were the largest travel expense categories by total spending.
+
+The charts demonstrate why examining both the number of records and the dollar amounts is useful. A category with fewer records may still account for substantial spending.
+
+#### Unusual Travel Payments
+
+The application includes an adjustable threshold for identifying large payments.
+
+During testing, a threshold of **$26,000** produced:
+
+| Measure | Result |
+|---|---:|
+| Flagged payments | 514 |
+| Combined flagged value | $67,419,966.95 |
+| Period analyzed | 2022–2026 |
+
+Several of the largest flagged payments were classified as in-state lodging, with the vendor listed as Procurement Card Payment.
+
+These payments may represent combined or aggregated transactions. A large payment alone does not establish that an expense is incorrect or improper.
+
+### Interpretation
+
+The most important finding is that Missouri travel spending increased across the five-year period, while spending was concentrated in certain agencies and expense categories.
+
+The unusual-payment analysis also demonstrated how adjustable thresholds can help identify transactions that may deserve additional investigation.
+
+Using interactive charts made it easier to compare financial activity across years and understand where spending was concentrated.
+
+### Limitations
+
+The analysis uses historical expenditure records rather than real-time transactions.
+
+The dataset does not provide enough supporting information to determine whether a flagged payment is inappropriate. Some payments may represent multiple transactions or consolidated charges.
+
+The threshold is a screening tool rather than a statistically validated anomaly-detection method.
+
+The analysis also does not adjust spending for inflation, changes in agency operations, or differences in reporting practices.
+
+### Next Steps
+
+If I continued this project, I would examine spending changes within individual agencies, investigate unusually large payments using supporting transaction details, and develop more specific thresholds for different expense categories.
+
+I would also explore rolling averages and drift detection to identify changes in travel spending patterns over time.
+
+### Custom Application
+
+The custom application is located in:
+
+`src/cintel/missouri_travel_app.py`
+
+Run the application with:
+
+```powershell
+uv run marimo run src/cintel/missouri_travel_app.py
+```
+
+The dashboard includes interactive spending charts, a fiscal-year selector, and unusual-payment analysis.
+
+[View Custom Application Source](https://github.com/Angie-Crews/cintel-06-continuous-intelligence/blob/main/src/cintel/missouri_travel_app.py)
+
 ## Documentation Index
 
 - **Home** - This landing page.

@@ -147,6 +147,94 @@ Pipeline executed successfully!
 
 The Python pipeline and reactive application were tested locally.
 
+## Custom Project — Missouri Travel Expenditure Dashboard
+
+### Overview
+
+For Module 6, Part D3, I created a custom interactive dashboard to analyze Missouri state travel expenditures for fiscal years 2022–2026.
+
+The project uses actual Missouri state expenditure data to examine spending trends, compare state agencies, review travel expense categories, and identify unusually large payments.
+
+### Data
+
+The project combines five annual Missouri State Expenditures datasets into one file.
+
+| Fiscal Year | Travel Records |
+|---|---:|
+| 2022 | 26,629 |
+| 2023 | 36,560 |
+| 2024 | 38,691 |
+| 2025 | 38,746 |
+| 2026 | 37,402 |
+| **Total** | **178,028** |
+
+The combined dataset is saved as `data/missouri_travel_2022_2026.csv`.
+
+The analysis includes fiscal year, state agency, expense description, vendor, and payment amount.
+
+### Methods
+
+The custom project uses Polars to clean and combine the annual datasets and Altair to create interactive charts.
+
+The dashboard includes:
+
+- Annual travel spending comparisons for 2022–2026.
+- Travel spending by Missouri state agency.
+- Travel spending by expense category.
+- An interactive fiscal-year dropdown.
+- An adjustable payment threshold to identify unusually large payments.
+- A table displaying the 20 largest flagged payments.
+
+The fiscal-year selector updates the agency and expense category charts. The annual spending chart continues to show all five years for comparison.
+
+### Results
+
+Annual travel expenditures increased from approximately $22.33 million in 2022 to $39.81 million in 2026.
+
+The analysis identified several major travel expense categories, including in-state lodging, in-state mileage, out-of-state lodging, and meals.
+
+The dashboard also allows users to examine spending differences across Missouri state agencies.
+
+The unusual-payment feature flags transactions exceeding a selected dollar amount. These results identify payments for further review but do not establish that the payments are incorrect or improper.
+
+### Run the Custom Project
+
+From the project root in VS Code, prepare the combined travel dataset:
+
+```shell
+uv run python -m cintel.missouri_travel_pipeline
+```
+
+Launch the interactive dashboard:
+
+```shell
+uv run marimo run src/cintel/missouri_travel_app.py
+```
+
+Press `CTRL+C` in the terminal to stop the application.
+
+### Custom Project Files
+
+- [Missouri Travel Pipeline](src/cintel/missouri_travel_pipeline.py)
+- [Missouri Travel Dashboard](src/cintel/missouri_travel_app.py)
+- [Combined Travel Dataset](data/missouri_travel_2022_2026.csv)
+
+### Interpretation
+
+The project demonstrates how continuous intelligence techniques can be applied to financial data.
+
+The dashboard makes it easier to identify spending trends, compare agencies, and investigate unusually large payments.
+
+The results provide useful information for monitoring expenditures and identifying areas that may require additional review.
+
+### Limitations
+
+The dashboard analyzes historical expenditure data rather than live transactions.
+
+The unusual-payment threshold is manually selected, and flagged payments require additional context before conclusions can be drawn.
+
+Future improvements could include agency-specific thresholds, rolling spending averages, and automated monitoring of new expenditure data.
+
 ## Project Documentation
 
 The [hosted documentation site](https://angie-crews.github.io/cintel-06-continuous-intelligence/)
