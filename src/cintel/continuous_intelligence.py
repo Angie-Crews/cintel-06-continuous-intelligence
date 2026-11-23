@@ -82,6 +82,7 @@ ARTIFACTS_DIR: Final[Path] = ROOT_DIR / "artifacts"
 
 DATA_FILE: Final[Path] = DATA_DIR / "system_metrics.csv"
 OUTPUT_FILE: Final[Path] = ARTIFACTS_DIR / "system_assessment.csv"
+OBSERVATIONS_FILE: Final[Path] = ARTIFACTS_DIR / "observation_assessments.csv"
 
 # === DEFINE THRESHOLDS ===
 
@@ -158,6 +159,43 @@ def main() -> None:
     LOG.info(f"STEP 3. Anomalies detected: {anomalies_df.height}")
 
     # ----------------------------------------------------
+    # STEP 3A: CLASSIFY INDIVIDUAL OBSERVATIONS
+    # ----------------------------------------------------
+    # Evaluate each observation against both thresholds.
+    # STABLE: No thresholds exceeded.
+    # WARNING: One threshold exceeded.
+    # CRITICAL: Two thresholds exceeded.
+
+    LOG.info("STEP 3A. Classifying individual observations...")
+
+    observations_df = df.with_row_index("observation", offset=1)
+
+    observations_df = observations_df.with_columns(
+        (
+            (pl.col("error_rate") > MAX_ERROR_RATE).cast(pl.Int64)
+            + (pl.col("avg_latency_ms") > MAX_AVG_LATENCY).cast(pl.Int64)
+        ).alias("thresholds_exceeded")
+    )
+
+    observations_df = observations_df.with_columns(
+        pl.when(pl.col("thresholds_exceeded") >= 2)
+        .then(pl.lit("CRITICAL"))
+        .when(pl.col("thresholds_exceeded") == 1)
+        .then(pl.lit("WARNING"))
+        .otherwise(pl.lit("STABLE"))
+        .alias("system_state")
+    )
+
+    observations_df.write_csv(OBSERVATIONS_FILE)
+
+    LOG.info(f"STEP 3A. Saved observation assessments: {OBSERVATIONS_FILE}")
+
+    LOG.info(
+        f"STEP 3A. Classification counts: "
+        f"{observations_df.group_by('system_state').len().to_dicts()}"
+    )
+
+    # ----------------------------------------------------
     # STEP 4: SUMMARIZE CURRENT SYSTEM STATE
     # ----------------------------------------------------
     # This step brings together ideas from earlier modules:
@@ -183,13 +221,21 @@ def main() -> None:
         ]
     )
 
-    # Add a simple assessment label
+    # Classify system health using three assessment levels.
+    # Count how many monitored signals exceed their thresholds.
+
     summary_df = summary_df.with_columns(
-        pl.when(
-            (pl.col("avg_error_rate") > MAX_ERROR_RATE)
-            | (pl.col("avg_latency_ms") > MAX_AVG_LATENCY)
-        )
-        .then(pl.lit("DEGRADED"))
+        (
+            (pl.col("avg_error_rate") > MAX_ERROR_RATE).cast(pl.Int64)
+            + (pl.col("avg_latency_ms") > MAX_AVG_LATENCY).cast(pl.Int64)
+        ).alias("thresholds_exceeded")
+    )
+
+    summary_df = summary_df.with_columns(
+        pl.when(pl.col("thresholds_exceeded") >= 2)
+        .then(pl.lit("CRITICAL"))
+        .when(pl.col("thresholds_exceeded") == 1)
+        .then(pl.lit("WARNING"))
         .otherwise(pl.lit("STABLE"))
         .alias("system_state")
     )

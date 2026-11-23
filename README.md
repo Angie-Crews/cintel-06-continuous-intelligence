@@ -1,8 +1,8 @@
 # cintel-06-continuous-intelligence
 
 [![Python 3.14](https://img.shields.io/badge/python-3.14%2B-blue?logo=python)](pyproject.toml)
-[![CI](https://github.com/denisecase/cintel-06-continuous-intelligence/actions/workflows/ci-python-zensical.yml/badge.svg)](https://github.com/denisecase/cintel-06-continuous-intelligence/actions/workflows/ci-python-zensical.yml)
-[![Documentation](https://img.shields.io/badge/docs-site-blue?logo=github)](https://denisecase.github.io/cintel-06-continuous-intelligence/)
+[![CI](https://github.com/Angie-Crews/cintel-06-continuous-intelligence/actions/workflows/ci-python-zensical.yml/badge.svg)](https://github.com/Angie-Crews/cintel-06-continuous-intelligence/actions/workflows/ci-python-zensical.yml)
+[![Documentation](https://img.shields.io/badge/docs-site-blue?logo=github)](https://angie-crews.github.io/cintel-06-continuous-intelligence/)
 
 [![uv managed](https://img.shields.io/badge/uv-managed-DE5FE9)](https://docs.astral.sh/uv/)
 [![ty type checked](https://img.shields.io/badge/ty-type_checked-2F80ED)](https://docs.astral.sh/ty/)
@@ -13,19 +13,24 @@
 
 ## Project Overview
 
-Author: Angie Crews
+**Author:** Angie Crews
+**Date:** November 2026
 
-Date: 2026 November
+This project combines techniques learned throughout the Continuous Intelligence course to monitor and evaluate system health.
 
-This project brings together techniques introduced
-throughout the Continuous Intelligence course.
+The application uses system metrics to identify unusual activity, measure performance, and classify system conditions.
 
-The goal is to develop an integrated monitoring application
-that identifies unusual spending patterns and changes over
-time using Missouri State Expenditures travel data.
+It includes:
 
-The project is configured in
-[pyproject.toml](pyproject.toml).
+- Signal design to calculate error rates, average latency, and throughput.
+- Anomaly detection using defined thresholds.
+- Individual observation classifications of STABLE, WARNING, or CRITICAL.
+- An overall system health assessment.
+- An interactive Marimo application with adjustable thresholds and a color-coded chart.
+
+The goal is to show how monitoring individual observations and overall system performance can help identify potential problems.
+
+The project is configured in [pyproject.toml](pyproject.toml).
 
 ## Data
 
@@ -82,45 +87,73 @@ uv run marimo run  src/cintel/app.py
 
 ## Results
 
-The pipeline summarizes the monitored signals
-and writes `artifacts/system_assessment.csv`.
-Review the resulting system assessment and explain
-which signals support the reported state.
+The pipeline analyzed 60 system observations using two thresholds:
 
-The example classifies the system state as:
+- Maximum error rate: 5%
+- Maximum average latency: 40 milliseconds
 
-- **STABLE** - summary signals remain within the defined thresholds.
-- **DEGRADED** - one or more summary signals exceed the defined thresholds.
+Each observation is classified using three levels:
 
-Successful execution produces a terminal message:
+- 🟢 **STABLE** - No thresholds exceeded.
+- 🟡 **WARNING** - One threshold exceeded.
+- 🔴 **CRITICAL** - Two thresholds exceeded.
 
-```shell
-========================
+### Observation Health Summary
+
+| Classification | Observations |
+|---|---:|
+| STABLE | 53 |
+| WARNING | 5 |
+| CRITICAL | 2 |
+| **Total** | **60** |
+
+Seven observations exceeded at least one threshold.
+
+### Overall System Assessment
+
+#### Overall System State: STABLE
+
+The average error rate was approximately 2.65%, and average latency was 33.71 milliseconds.
+
+Although the overall system was classified as STABLE, individual observations showed WARNING and CRITICAL conditions.
+
+This demonstrates why monitoring individual observations is important even when overall averages appear normal.
+
+### Interactive Visualization
+
+The Marimo application includes:
+
+- Adjustable error rate and latency thresholds.
+- An observation health summary.
+- A color-coded chart showing system conditions across 60 observations.
+- An overall system assessment.
+- A table of detected anomalies.
+
+Changing the thresholds automatically updates the classifications and chart.
+
+### Generated Artifacts
+
+The pipeline creates:
+
+- `artifacts/system_assessment.csv` - Overall system assessment.
+- `artifacts/observation_assessments.csv` - Individual observation classifications.
+- `project.log` - Pipeline execution log.
+
+Successful execution displays:
+
+```text
 Pipeline executed successfully!
-========================
 ```
 
-A `project.log` file is created in the project root.
-
-This confirms that the Python pipeline executes
-and the logging system works.
-
-## Verification
-
-Run the automated tests:
-
-```shell
-uv run pytest
-```
+The Python pipeline and reactive application were tested locally.
 
 ## Project Documentation
 
-The [hosted documentation site](https://denisecase.github.io/cintel-06-continuous-intelligence/)
+The [hosted documentation site](https://angie-crews.github.io/cintel-06-continuous-intelligence/)
 is published using Zensical and GitHub Pages.
 
-The documentation site is used to present the project report,
-covering such sections as data, methods, results, visualizations,
-interpretation, and conclusions.
+The documentation includes project data, methods, results,
+visualizations, interpretation, and conclusions.
 
 ## CI/CD and GitHub Actions
 
@@ -128,8 +161,8 @@ This project includes continuous integration and continuous deployment (CI/CD)
 to check project files and publish the docs.
 GitHub Actions include:
 
-- [CI: Python and Documentation Checks](https://github.com/denisecase/cintel-06-continuous-intelligence/actions/workflows/ci-python-zensical.yml)
-- [CD: Documentation Deployment](https://github.com/denisecase/cintel-06-continuous-intelligence/actions/workflows/deploy-zensical.yml)
+- [CI: Python and Documentation Checks](https://github.com/Angie-Crews/cintel-06-continuous-intelligence/actions/workflows/ci-python-zensical.yml)
+- [CD: Documentation Deployment](https://github.com/Angie-Crews/cintel-06-continuous-intelligence/actions/workflows/deploy-zensical.yml)
 
 ## Developer Reference
 
@@ -214,7 +247,7 @@ testing, documentation, and code quality.
 
 ## Links
 
-- [Hosted Documentation](https://denisecase.github.io/cintel-06-continuous-intelligence/)
+- [Hosted Documentation](https://angie-crews.github.io/cintel-06-continuous-intelligence/)
 - [Professional Python Workflow Guide](https://denisecase.github.io/pro-analytics-02/)
 - [Citation](CITATION.cff)
 - [License](LICENSE)

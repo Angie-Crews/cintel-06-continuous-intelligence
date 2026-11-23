@@ -1,21 +1,27 @@
 # Continuous Intelligence System Assessment
 
-Continuous Intelligence | Project 06 | Example Report
+Continuous Intelligence | Project 06 | Custom Project
+
+**Author:** Angie Crews
+**Date:** November 2026
 
 ## Overview
 
-This project integrates signal design,
-anomaly detection, and system assessment
-into a continuous intelligence pipeline.
+This project combines signal design, anomaly detection, and system assessment into a continuous intelligence pipeline.
 
-The objective is to transform operational measurements
-into interpretable indicators of system behavior
-and produce an overall assessment of system state.
+The objective is to evaluate system performance using both overall averages and individual observations.
+
+The project expands the original two-level assessment into three health classifications:
+
+- 🟢 **STABLE** - No thresholds exceeded.
+- 🟡 **WARNING** - One threshold exceeded.
+- 🔴 **CRITICAL** - Two thresholds exceeded.
+
+An interactive Marimo application allows users to adjust thresholds and observe how system classifications change.
 
 ## Data
 
-The example dataset contains 60 observations
-of system activity.
+The dataset contains 60 observations of system activity.
 
 Each observation records:
 
@@ -23,21 +29,21 @@ Each observation records:
 - Errors encountered.
 - Total response time in milliseconds.
 
-The dataset includes a period of elevated
-errors and response times.
+The dataset includes a period of elevated errors and response times.
 
-[View Example Dataset](https://github.com/denisecase/cintel-06-continuous-intelligence/blob/main/data/system_metrics.csv)
+[View System Metrics Dataset](https://github.com/Angie-Crews/cintel-06-continuous-intelligence/blob/main/data/system_metrics.csv)
 
 ## Methods
 
-The pipeline applies three analytical steps.
+The pipeline uses Polars to process system metrics and evaluate system health.
 
 ### 1. Signal Design
 
 Raw measurements are transformed into:
 
-- Error rate: errors divided by requests.
-- Average latency: total latency divided by requests.
+- **Error rate:** Errors divided by requests.
+- **Average latency:** Total latency divided by requests.
+- **Throughput:** A calculated monitoring signal.
 
 ### 2. Anomaly Detection
 
@@ -46,101 +52,135 @@ Individual observations are flagged when:
 - Error rate exceeds 5%, or
 - Average latency exceeds 40 milliseconds.
 
-### 3. System Assessment
+### 3. Three-Level System Assessment
 
-The pipeline calculates mean values
-across all observations.
+The customized project evaluates how many thresholds each observation exceeds.
 
-It classifies the overall system state as:
+| Classification | Thresholds Exceeded | Interpretation |
+|---|---:|---|
+| 🟢 STABLE | 0 | Normal conditions |
+| 🟡 WARNING | 1 | Potential performance concern |
+| 🔴 CRITICAL | 2 | Multiple performance concerns |
 
-- `STABLE` when neither mean signal exceeds its threshold.
-- `DEGRADED` when either mean signal exceeds its threshold.
+The pipeline also calculates average measurements across all observations to determine the overall system state.
+
+### 4. Interactive Monitoring
+
+The Marimo application includes adjustable thresholds, observation classifications, and an interactive Altair chart.
+
+Changing either threshold automatically updates the system health summary, chart, and anomaly results.
 
 ## Results
 
-The example produces the following assessment.
+The pipeline successfully processed 60 observations.
 
-| Metric               |   Result |
-| -------------------- | -------: |
-| Average requests     |   157.35 |
-| Average errors       |     4.43 |
-| Average error rate   |    2.65% |
-| Average latency      | 33.71 ms |
-| Overall system state |   STABLE |
+### Observation Health Summary
 
-The pipeline also identifies **7 anomalous observations**
-using its individual-observation thresholds.
+| Classification | Observations | Percentage |
+|---|---:|---:|
+| 🟢 STABLE | 53 | 88.3% |
+| 🟡 WARNING | 5 | 8.3% |
+| 🔴 CRITICAL | 2 | 3.3% |
+| **Total** | **60** | **100%** |
 
-[View System Assessment](https://github.com/denisecase/cintel-06-continuous-intelligence/blob/main/artifacts/system_assessment.csv)
+Seven observations exceeded at least one threshold.
+
+### Overall System Assessment
+
+| Metric | Result |
+|---|---:|
+| Average requests | 157.35 |
+| Average errors | 4.03 |
+| Average error rate | 2.65% |
+| Average latency | 33.71 ms |
+| Thresholds exceeded | 0 |
+| Overall system state | STABLE |
+
+[View Overall System Assessment](https://github.com/Angie-Crews/cintel-06-continuous-intelligence/blob/main/artifacts/system_assessment.csv)
+
+[View Individual Observation Assessments](https://github.com/Angie-Crews/cintel-06-continuous-intelligence/blob/main/artifacts/observation_assessments.csv)
+
+### Interactive Visualization
+
+![System Health Across 60 Observations](images/system-health-chart.png)
+
+The Marimo application displays a color-coded chart of all 60 observations.
+
+- Green represents STABLE observations.
+- Yellow represents WARNING observations.
+- Red represents CRITICAL observations.
+
+The chart responds to changes in the error rate and latency sliders.
+
+[Open the Reactive App](./app/index.html)
 
 ## Interpretation
 
-The overall assessment is `STABLE`
-because the average error rate and latency
-remain below their configured thresholds.
+The overall system assessment was **STABLE** because the average error rate and latency remained below the configured thresholds.
 
-However, several individual observations
-exceed the anomaly thresholds.
+However, the observation-level analysis identified:
 
-This distinction is important.
+- 53 stable observations.
+- 5 warning observations.
+- 2 critical observations.
 
-A system may appear stable when summarized
-across an entire observation period
-while experiencing shorter episodes
-of degraded performance.
+This demonstrates that overall averages can hide shorter periods of performance problems.
 
-Monitoring should consider both overall
-conditions and localized anomalies.
+Evaluating individual observations provides a clearer understanding of when system performance may require attention.
+
+## Technical Modification and Experiment
+
+The original project classified system health as STABLE or DEGRADED.
+
+The customized version introduces three classifications and evaluates each observation individually.
+
+The experiment was designed to determine whether additional classifications would provide more useful information about system performance.
+
+The results showed that the overall system remained STABLE, while seven individual observations exceeded thresholds.
+
+The modification provided additional information by distinguishing observations with one threshold violation from those with two.
 
 ## Limitations
 
-The example assessment is based on aggregate
-means and fixed thresholds.
+The analysis uses a fixed dataset of 60 observations and manually selected thresholds.
 
-It does not yet incorporate rolling-window analysis,
-reference-period drift comparisons,
-or persistent alerting.
+The classifications indicate threshold violations but do not establish the actual severity or cause of a performance issue.
 
-The final assessment artifact contains summary metrics
-but does not preserve the individual anomaly records.
+Although individual observations are now saved for further analysis, the project does not yet include:
 
-A more complete system could retain
-observation-level evidence and combine
-rolling monitoring, drift detection,
-and system-state classification.
+- Rolling-window monitoring.
+- Reference-period drift comparisons.
+- Automated notifications.
+- Continuous real-time data collection.
+
+Future improvements could incorporate these techniques to provide more complete monitoring.
 
 ## Conclusion
 
-Continuous intelligence connects measurements,
-signals, analytical rules, and interpretation.
+This project demonstrates how continuous intelligence combines monitoring signals, anomaly detection, and system classification.
 
-The example demonstrates how several techniques
-can contribute to an assessment of system behavior.
+The most important finding is that **an overall STABLE assessment does not mean every individual observation is within acceptable limits**.
 
-Its most important finding is that
-**an overall stable classification does not guarantee
-that every observation was within acceptable limits.**
-
-Effective monitoring requires both summary assessments
-and sufficient detail to investigate anomalous conditions.
+The three-level classification system and interactive visualization provide additional detail for identifying and investigating potential performance problems.
 
 ## Documentation Index
 
-- **Home** - this landing page
-- [**Project Instructions**](project-instructions.md)
-- [**Glossary**](glossary.md)
-- [**API**](api.md)
-- [**Reactive App**](./app/index.html)
+- **Home** - This landing page.
+- [Project Instructions](project-instructions.md)
+- [Glossary](glossary.md)
+- [API](api.md)
+- [Reactive App](./app/index.html)
 
 ## Project Links
 
-- [GitHub Repository](https://github.com/denisecase/cintel-06-continuous-intelligence)
-- [Example Pipeline](https://github.com/denisecase/cintel-06-continuous-intelligence/blob/main/src/cintel/continuous_intelligence.py)
-- [Results and Artifacts](https://github.com/denisecase/cintel-06-continuous-intelligence/tree/main/artifacts)
+- [GitHub Repository](https://github.com/Angie-Crews/cintel-06-continuous-intelligence)
+- [Python Monitoring Pipeline](https://github.com/Angie-Crews/cintel-06-continuous-intelligence/blob/main/src/cintel/continuous_intelligence.py)
+- [Marimo Application](https://github.com/Angie-Crews/cintel-06-continuous-intelligence/blob/main/src/cintel/app.py)
+- [Results and Artifacts](https://github.com/Angie-Crews/cintel-06-continuous-intelligence/tree/main/artifacts)
 
 ## Project Resources
 
 - [Project Instructions](project-instructions.md)
 - [Professional Python Guide](https://denisecase.github.io/pro-analytics-02/)
-- [Professional Python Project Explainer](https://pup-pack.github.io/professional-python-project-explainer/).
+- [Professional Python Project Explainer](https://pup-pack.github.io/professional-python-project-explainer/)
 - [Suggested Datasets](https://denisecase.github.io/pro-analytics-02/reference/datasets/cintel/)
